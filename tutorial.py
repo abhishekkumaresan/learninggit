@@ -244,3 +244,4 @@ class TutorialProductTempalteNutrient(osv.osv):
         'value': fields.float('Nutrient Value'),
         'daily_recomended': fields.float('Daily Recommended Value')
     }
+## Adding sample git comments
