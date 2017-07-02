@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf8"?>
+<openerp>
+    <data>
+
+        <!-- Adding Calories to form view -->
+
+        <record id="tutorial_product_template_form_view" model="ir.ui.view">
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="model">product.template</field>
+            <field name="arch" type="xml">
+                <field name="type" position="after">
+                    <field name="calories"/>
+                </field>
+                <page name="sales" position="after">
+                    <page name="nutrients" string="Nutrients">
+                        <field name="nutrient_ids" widget="One2many_list">
+                        <tree editable="bottom">
+                            <field name="nutrient_id"/>
+                            <field name="value"/>
+                            <field name="uom"/>
+                            <field name="daily_recomended"/>
+                        </tree>
+                        </field>
+                    </page>
+                 </page>
+            </field>
+
+        </record>
+
+        <!-- Adding Calories to form view -->
+
+
+
+        <!-- Creating a custom tutorial sub menu under main menu  -->
+        <menuitem id="tutorial_menu_parent" name="Tutorial menu Parent"/>
+
+        <!-- Creating a custom tutorial sub menu under main menu  -->
+        <menuitem id="tutorial_menu" name="Tutorial menu " parent="tutorial_menu_parent"
+                sequence="16"/>
+
+
+
+        <!-- Adding Calories to tree view -->
+
+
+        <record id="tutorial_product_template_tree_view" model="ir.ui.view">
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="model">product.template</field>
+            <field name="arch" type="xml">
+                <field name="categ_id" position="before">
+                    <field name="calories"/>
+                </field>
+            </field>
+
+        </record>
+
+
+        <!-- Adding Calories to tree view -->
+
+
+        <!-- defining diet item menu's action -->
+
+        <record id="product.product_template_action_dietfacts" model="ir.actions.act_window">
+            <field name="name">Diet Items</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="product.product_template_tree_view"/>
+            <field name="context">{"search_default_filter_to_sell":1}</field>
+            <field name="domain">[('categ_id.name','=','Diet Items')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to define a new product.
+                </p>
+                <p>
+                    You must define a product for everything you sell, whether it's a physical product, a consumable or
+                    a service you offer to customers.
+                </p>
+                <p>
+                    The product form contains information to simplify the sale process: price, notes in the quotation,
+                    accounting data, procurement methods, etc.
+                </p>
+            </field>
+        </record>
+
+
+        <!-- defining diet item menu's action -->
+
+        <!-- defining diet item menu -->
+
+        <menuitem action="product.product_template_action_dietfacts"
+                  id="menu_product_template_action_dietfacts"
+                  parent="tutorial_menu" sequence="14"/>
+
+
+        <!-- defining diet item menu -->
+
+                <!-- Defining a search view -->
+
+        <record id="view_tutorial_filter" model="ir.ui.view">
+            <field name="name">res.users.meal_filter</field>
+            <field name="model">res.users.meal</field>
+            <field name="arch" type="xml">
+            <search string="Search Sales Order">
+                <field name="meal_name"/>
+                <field name="meal_date"/>
+                <field name="user_id"/>
+            <separator/>
+            <filter string="today" name="Today"  domain="[('meal_date','&lt;=', (datetime.date.today()).strftime('%Y-%m-%d')),('meal_date','&gt;=',(datetime.date.today()).strftime('%Y-%m-%d'))]" help="Created today"/>
+                <group string ="groupby">
+                    <filter string="Sample Group" context="{'group_by':'cus_id'}"/>
+                </group>
+            </search>
+            </field>
+        </record>
+
+        <!-- Defining a search view -->
+
+
+        <!-- defining meal item menu's action -->
+
+
+        <record id="meal_action_tutorial" model="ir.actions.act_window">
+            <field name="name">Meal Items</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.users.meal</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_type">form</field>
+            <field name="search_view_id" ref="view_tutorial_filter"/>
+            <!--
+            <field name="view_id" ref= "product.product_template_tree_view" />
+            <field name="context" >{"search_default_filter_to_sell":1}</field>
+            <field name="domain">[('categ_id.name','=','Diet Items')]</field>
+            -->
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to define a new product.
+                </p>
+            </field>
+        </record>
+
+        <!-- defining meal item menu's action -->
+
+        <!-- defining meal item menu -->
+        <menuitem action="meal_action_tutorial"
+                  id="menu_meal_action_tutorial" parent="tutorial_menu"
+                  sequence="15"/>
+
+        <!-- defining meal item menu -->
+
+
+        <!-- defining nutrient item menu's action -->
+
+        <record id="nutrient_action_tutorial" model="ir.actions.act_window">
+            <field name="name">Nutrient Items</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.nutrient</field>
+            <field name="view_mode">form</field>
+            <field name="view_type">form</field>
+            <field name="target">new</field>
+            <field name="help" type="html">
+
+                <p class="oe_view_nocontent_create">
+                    Click to define a new Nutrient.
+                </p>
+            </field>
+
+        </record>
+
+        <!-- defining nutrient item menu's action -->
+
+
+
+
+
+        <!-- defining nutrient item menu -->
+        <menuitem action="nutrient_action_tutorial"
+                  id="menu_nutrient_action_tutorial" parent="tutorial_menu"
+                  sequence="15"/>
+
+        <!-- defining nutrient item menu -->
+
+
+        <!-- Code to create custom form view -->
+
+        <record id="tutorial_meal_form_view" model="ir.ui.view">
+            <field name="model">res.users.meal</field>
+            <field name="arch" type="xml">
+                <form>
+                    <!-- Adding button and corresponding function in header of the web page -->
+                    <header>
+                        <!--An Object button calls a python function  -->
+
+                        <!--<button name="test_button_function" string="Confirm" type="object" attrs="{'invisible':['|',('state','=','confirm'),('large_meal','=',True)]}"/>-->
+                        <button name="test_button_function" string="Confirm" type="object" attrs="{'invisible':[('large_meal','=',True)]}"/>
+
+                        <!--An Object button calls a python function  -->
+
+                        <!--
+                            An Action button calls a an another menu function
+                             The button's name field should be equal to the id of a record (This is similar to a menu's action)
+
+
+                        -->
+                        <button name="%(nutrient_action_tutorial)d" string="Action" type="action"/>
+
+
+                        <!--<field name="state" widget="statusbar"/>-->
+                    </header>
+                    <!-- Adding button and corresponding function in header of the web page -->
+
+
+                    <!--sheet Tag is used to bring the contents of a page within a square shaped form -->
+                    <sheet>
+                    <group>
+                        <group>
+                        <field name="meal_name" />
+                        <field name="meal_date" readonly="True"/>
+                        <field name="user_id" required="True"/>
+                        <field name="total_calories"/>
+                        </group>
+                        <group>
+                        <field name="large_meal" />
+                        <field name="address"/>
+                        <field name="selection" widget="radio"/>
+                        <field name="cus_id" on_change="onchange_fun(cus_id)"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="meal_items" string="Meal Items">
+                            <field name="item_ids" widget="one2many_list" on_change="cal_calories(item_ids)">
+                            <!--<field name="item_ids" widget="one2many_list">-->
+                                <tree string="Menu Items" >
+                                    <field name="item_id"/>
+                                    <field name="calories"/>
+                                    <field name="servings"/>
+                                    <!--<field name="product"/>-->
+                                    <!--<field name="product_1"/>-->
+                                </tree>
+
+                                <form>
+                                    <group >
+                                    <field name="item_id"/>
+                                    <field name="calories"/>
+                                    <field name="servings"/>
+                                    <field name="product"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                    </sheet>
+                    <group class="oe_subtotal_footer oe_right" colspan="5" name="tutorial_total">
+                    <field name="meal_name"/>
+                    </group>
+                </form>
+            </field>
+
+
+        </record>
+
+
+        <!-- Code to create custom form view-->
+
+        <!-- Code to create custom tree view-->
+
+
+        <record id="tutorial_meal_tree_view" model="ir.ui.view">
+            <field name="model">res.users.meal</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="meal_name"/>
+                    <field name="meal_date"/>
+                    <field name="user_id"/>
+                    <field name="total_calories" sum="Total Calories"/>
+                </tree>
+
+
+            </field>
+
+
+        </record>
+
+        <!-- Code to create custom tree view-->
+
+
+
+
+
+
+        <!-- Creating Report in Odoo -->
+
+        <template id="product.nutrition">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.external_layout">
+                        <div class="page">
+                            <div class="oe_structure"/>
+                            <h1>Nutrition Report</h1>
+                            <h2>Product Name <span t-field="o.name"/></h2>
+                            <p>Calories <span t-field="o.calories"/></p>
+
+                            <h3>Nutrient Information</h3>
+                            <t t-foreach="o.nutrient_ids" t-as="n">
+                                <p>
+                                <span t-field="n.nutrient_id.name"/>
+                                    <span t-field="n.value"/>
+                                    <span t-field="n.nutrient_id.uom_id.name"/>
+                                </p>
+                            </t>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <report id="tutorial_report" model="product.template"
+            string ="Product Nutrition Report"
+                report_type = "qweb-pdf"
+                name="product.nutrition"
+                file="odoo.report">
+
+        </report>
+
+        <!-- Creating Report in Odoo -->
+
+
+
+    </data>
+</openerp>
